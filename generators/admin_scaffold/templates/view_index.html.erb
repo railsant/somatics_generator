@@ -1,0 +1,28 @@
+<div class="contextual"></div>
+
+<h2><%= plural_name.humanize %></h2>
+
+<!-- Redmine Filters-->
+<%%= filters %>
+
+<%%# form_tag bulk_admin_<%= plural_name %>_path, :id => :form do -%>
+<div class="autoscroll">
+  <%%= render :partial => 'list', :locals => {:<%= plural_name %> => @<%= plural_name %>} %>
+</div>
+<%%= will_paginate @<%= plural_name%>, :renderer => SomaticLinkRenderer %>
+
+<%%#= render :partial => 'bulk' %>
+<%%# end %>
+
+<!-- TODO Export-->
+<p class="other-formats">Also available in:
+	<span><%%=link_to 'CSV',  admin_<%= plural_name %>_path(:format => :csv),  :class => 'csv' %></span>
+	<span><%%=link_to 'XLS',  admin_<%= plural_name %>_path(:format => :xls),  :class => 'xls' %></span>	
+	<span><%%=link_to 'PDF',  admin_<%= plural_name %>_path(:format => :pdf),  :class => 'pdf' %></span>
+</p>
+<div style="clear:both;"></div>
+    
+<%% content_for :sidebar do %>
+  <h3>Actions</h3>
+  <%%= link_to 'New <%= singular_name %>', new_admin_<%= singular_name %>_path %>
+<%% end %>

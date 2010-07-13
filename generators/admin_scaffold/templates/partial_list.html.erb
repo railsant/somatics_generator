@@ -1,0 +1,28 @@
+<table class="list issues">
+	<thead>
+		<tr>
+      <!-- <th><%%#= link_to image_tag('toggle_check.png', :alt => "Toggle_check"), admin_<%= plural_name %>_path, :onclick => "toggleIssuesSelection(Element.up(this, &quot;form&quot;)); return false;", :title => "Check all/Uncheck all" %></th> -->
+      <th title="Sort by &quot;#&quot;"><%%= sort_link_helper 'ID', 'id' %></th>
+<% for attribute in attributes -%>
+      <th title="Sort by &quot;<%= attribute.name.humanize %>&quot;"><%%= sort_link_helper '<%= attribute.name.humanize %>', '<%= attribute.name %>'%></th>
+<% end -%>
+		</tr>
+	</thead>
+	<tbody>
+	<%% unless <%= plural_name %>.empty? %>
+		<%% for <%= singular_name %> in <%= plural_name %> %>		
+		<tr id="<%% dom_id(<%=singular_name%>)%>" class="hascontextmenu <%= cycle 'odd' , 'even' %> issue">
+      <!-- <td class="checkbox"><input name="ids[]" type="checkbox" value="<%%#= <%=singular_name%>.id %>" /></td> -->
+      <td onclick="link_to(<%%= "'#{admin_<%=singular_name%>_path(<%=singular_name%>)}'" %>);"><%%= link_to <%= singular_name %>.id, [:admin, <%= singular_name %>]%></td>
+<% for attribute in attributes -%>
+      <td onclick="link_to(<%%= "'#{admin_<%=singular_name%>_path(<%=singular_name%>)}'" %>);" class="<%= attribute.name %>"><%%=h <%= singular_name %>.<%= attribute.name %> %></td>
+<% end -%>
+    </tr>		  
+		<%% end %>
+	<%% else -%>
+		<tr class="datos"> 
+		  <td colspan="100" align="center">No Data available</td> 
+		</tr> 
+	<%% end -%>	
+  </tbody>
+</table>

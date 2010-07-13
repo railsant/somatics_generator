@@ -1,0 +1,13 @@
+<table class="attributes" width="100%">
+<tbody> 
+  <tr>
+		<td colspan="2"><br/><h3><%=singular_name.humanize%> Information</h3></td>
+	</tr>
+<% for attribute in attributes -%>
+	<tr>
+	  <td><b><%= attribute.name.humanize %></b></td>
+	  <td><%%=h <%= singular_name %>.<%= attribute.name %> %></td>
+	</tr>
+<% end -%>
+</tbody>
+</table>

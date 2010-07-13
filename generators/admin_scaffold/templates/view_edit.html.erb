@@ -1,0 +1,22 @@
+<div class="contextual">
+  <%%= link_to 'Update', edit_admin_<%= singular_name %>_path(@<%= singular_name %>), :accesskey => "e", :class => "icon icon-edit", :onclick => "showAndScrollTo('update','focus'); return false;"%>
+  <%%= link_to 'Delete', [:admin,@<%= singular_name %>], :confirm => 'Are you sure?', :method => :delete ,:class => 'icon icon-del' %>
+</div>
+
+<h2><%= singular_name.humanize %> #<%%= @<%= singular_name %>.id %></h2>
+
+<div class="issue details">
+	<%%= render :partial => 'show' , :locals => {:<%= singular_name %> => @<%= singular_name %>} %>
+</div>
+
+<div id="update">
+  <h3>Update</h3>
+  <div id="focus"></div>
+  <%%= render :partial => 'edit' , :locals => {:<%= singular_name %> => @<%= singular_name %>} %>
+</div>
+<div style="clear: both;"></div>
+    
+<%% content_for :sidebar do %>
+  <h3>Actions</h3>
+  <%%= link_to 'Back to <%= plural_name %>', admin_<%= plural_name %>_path %>
+<%% end %>

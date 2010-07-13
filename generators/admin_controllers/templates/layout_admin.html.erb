@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Inspire Synergy Limited</title>
+
+  <%%= stylesheet_link_tag 'admin', :media => 'all' %>
+  <%%= stylesheet_link_tag 'jstoolbar', :media => 'all' %>
+  <%%#= stylesheet_link_tag 'context_menu', :media => 'all' %>  
+  <!--[if IE]>
+  <style type="text/css">
+    * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+    body {behavior: url(/stylesheets/csshover.htc);}
+  </style>
+  <![endif]-->
+
+  <%%= javascript_include_tag :defaults %>
+  <%%= javascript_include_tag 'select_list_move' %>
+  <%%= javascript_include_tag 'context_menu' %>
+  <!-- 
+  <link href="http://www.redmine.org/issues.atom?query_id=" rel="alternate" title="Issues" type="application/atom+xml" />
+  <link href="http://www.redmine.org/issues/changes?format=atom&amp;query_id=" rel="alternate" title="Details of all changes" type="application/atom+xml" />
+  -->
+  <%%= init_tinymce_hammer_if_required %>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="wrapper2">
+      <div id="top-menu">
+        <%%# if current_user %>
+        <div id="account">
+          <ul>
+            <li>Logged in as Administrator<%%#= link_to current_user.name, admin_user_url(current_user) %></li>
+            <li><%%#= link_to 'Logout', admin_user_logout_url %></li>
+          </ul>
+        </div>
+        <%%# end %>
+        <ul>
+          <li><%%= link_to 'Home', '/' %></li>
+          <li><%%= link_to 'Admin Panel', admin_root_path %></li>
+          <li><%%= link_to 'Support', 'http://support.inspiresynergy.com', :class => 'supports' %></li>
+        </ul>
+      </div> <!-- End of Top Menu -->
+      <div id="header">
+        <div id="quick-search">
+          <form action="" method="get">
+            <input name="" type="hidden" value="1" />
+            <a href="" accesskey="4">Search</a>:
+              <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+          </form>
+        </div>
+        <h1>Somatics - Admin Panel</h1>
+        <%%# if current_user %>
+        <div id="main-menu">
+          <ul>
+            <%%= render :partial => 'admin/shared/menu' %>
+          </ul>
+        </div>
+        <%%# end %>
+      </div> <!-- End of Header -->
+      <div class="main <%%='nosidebar' unless has_content?(:sidebar)%>" id="main">
+        <div id="sidebar">        
+          <%%= yield :sidebar %>
+          <!-- <h3>Issues</h3>
+          <h3>Custom queries</h3> -->
+        </div> <!-- End of Sidebar -->
+        <div id="content">
+          <%% if flash[:notice] %>
+          <div class="flash notice"><%%= flash[:notice] %></div>
+          <%% end %>
+          <%% if flash[:error] %>
+          <div class="flash error"><%%= flash[:error] %></div>
+          <%% end %>
+          <%% if flash[:warning] %>
+          <div class="flash warning"><%%= flash[:warning] %></div>
+          <%% end %>
+          <%%= yield %>
+        </div> <!-- End of Content -->
+        <div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+	      <div id="footer">
+          <div class="bgl">
+            <div class="bgr">
+              Somatics. Powered by &copy; <%= Time.now.year %> Inspire Synergy Limited. MIT License
+            </div>
+          </div>
+        </div> <!-- End of Footer -->
+      </div> <!-- End of Main -->
+    </div> <!-- End of Wrapper2 -->
+  </div> <!-- End of Wrapper -->
+</body>
+</html>

@@ -1,0 +1,28 @@
+<%% form_tag admin_<%= sessions_controller_routing_name %>_path, :id => 'login-form' do %>
+<table>
+  <tbody>
+    <tr>
+      <td align="right"><%%= label_tag 'login' %></td>
+      <td align="left"><%%= text_field_tag 'login', @login %></td>
+    </tr>
+    <tr>
+      <td align="right"><%%= label_tag 'password' %></td>
+      <td align="left"><%%= password_field_tag 'password', nil %></td>
+    </tr>
+    <!-- Uncomment this if you want this functionality
+    <tr>
+      <td align="right"><%%#= label_tag 'remember_me', 'Remember me' %></td>
+      <td align="left"><%%#= check_box_tag 'remember_me', '1', @remember_me %></td>
+    </tr>
+    -->
+    <tr>
+      <td align="right"></td>
+      <td align="left"></td>
+    </tr>
+    <tr>
+      <td align="left"></td>
+      <td align="right"><%%= submit_tag 'Log in' %></td>
+    </tr>    
+  </tbody>
+</table>
+<%% end %>

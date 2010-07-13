@@ -1,0 +1,7 @@
+<%% form_for([:admin,@<%= singular_name %>]) do |f| %>
+  <div class="box tabular settings">
+  <%%= f.error_messages %>
+  <%%= render :partial => 'form' , :locals => {:f => f} %>
+  </div>
+  <%%= f.submit 'Update' %>
+<%% end %>
