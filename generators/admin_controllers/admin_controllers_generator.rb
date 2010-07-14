@@ -38,7 +38,7 @@ class AdminControllersGenerator < Rails::Generator::Base
       
       # Images
       Dir.foreach "#{RAILS_ROOT}/vendor/plugins/somatics_generator/generators/admin_controllers/templates/images/" do |f|
-        m.file "images/#{f}", "public/images/#{f}", :collision => :skip unless f.match(/\./) 
+        m.file "images/#{f}", "public/images/#{f}", :collision => :skip
       end
       
       # Routing
