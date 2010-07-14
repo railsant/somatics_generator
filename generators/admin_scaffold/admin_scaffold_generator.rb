@@ -101,7 +101,7 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
 
       m.template 'controller.rb', File.join('app/controllers', controller_class_path, "#{controller_file_name}_controller.rb")
       m.template 'helper.rb',     File.join('app/helpers',     controller_class_path, "#{controller_file_name}_helper.rb")
-
+      m.template 'mime_types.rb', File.join('config/initializer',"mime_types.rb")
       # Views and Builders
       m.template "partial_form.html.erb", File.join('app/views', controller_class_path, controller_file_name, "_form.html.erb")
       m.template "partial_list.html.erb", File.join('app/views', controller_class_path, controller_file_name, "_list.html.erb")
