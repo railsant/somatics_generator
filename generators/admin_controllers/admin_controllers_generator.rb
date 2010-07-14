@@ -41,6 +41,9 @@ class AdminControllersGenerator < Rails::Generator::Base
         m.file "images/#{f}", "public/images/#{f}", :collision => :skip
       end
       
+      # Mime Types
+      m.template 'mime_types.rb', File.join('config/initializers',"mime_types.rb")
+      
       # Routing
       m.admin_route_root :controller => 'home', :action => 'index'
       m.admin_route_name 'home', '/admin/index', {:controller => 'home', :action => 'index'}
