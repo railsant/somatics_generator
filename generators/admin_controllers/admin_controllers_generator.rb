@@ -42,7 +42,7 @@ class AdminControllersGenerator < Rails::Generator::Base
       end
       
       # Mime Types
-      m.template 'mime_types.rb', File.join('config/initializers',"mime_types.rb")
+      m.template 'mime_types.rb', File.join('config/initializers',"mime_types.rb"), :collision => :force
       
       # Routing
       m.admin_route_root :controller => 'home', :action => 'index'
@@ -54,6 +54,12 @@ class AdminControllersGenerator < Rails::Generator::Base
   
   def banner
     "Usage: #{$0} admin_controllers"
+  end
+  
+  def mime_type()
+    gsub_file File.join('app/views/admin/shared', "_menu.html.erb"), /\z/mi do |match|
+      "<li><%= link_to '#{resource.humanize}', '/admin/#{resource}', :class => (match_controller?('#{controller_file_name}'))  ? 'selected' : ''%></li>\n"
+    end
   end
 end
 
