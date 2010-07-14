@@ -117,9 +117,9 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
       m.template "builder_index.pdf.prawn",   File.join('app/views', controller_class_path, controller_file_name, "index.pdf.prawn")
 
       # Application, Layout and Stylesheet and Javascript.
-      m.template_without_destroy 'layout.html.erb', File.join('app/views/layouts', controller_class_path, "admin.html.erb"), :collision => :skip
-      m.template_without_destroy 'application_helper.rb', File.join('app/helpers', controller_class_path, "admin_helper.rb"), :collision => :skip
-      m.template_without_destroy 'partial_menu.html.erb', File.join('app/views', controller_class_path, "shared", "_menu.html.erb"), :collision => :skip
+      # m.template_without_destroy 'layout.html.erb', File.join('app/views/layouts', controller_class_path, "admin.html.erb"), :collision => :skip
+      # m.template_without_destroy 'application_helper.rb', File.join('app/helpers', controller_class_path, "admin_helper.rb"), :collision => :skip
+      # m.template_without_destroy 'partial_menu.html.erb', File.join('app/views', controller_class_path, "shared", "_menu.html.erb"), :collision => :skip
       m.header_menu(controller_file_name)
       # m.template_without_destroy 'context_menu.js', 'public/javascripts/context_menu.js', :collision => :skip
       # m.template_without_destroy 'select_list_move.js', 'public/javascripts/select_list_move.js', :collision => :skip
