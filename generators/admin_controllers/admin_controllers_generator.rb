@@ -37,7 +37,9 @@ class AdminControllersGenerator < Rails::Generator::Base
       m.template_without_destroy 'js_select_list_move.js', 'public/javascripts/select_list_move.js'
       
       # Images
-      # m.file 'vendor/somatics_generator/images/*', 'public/images', :collision => :skip
+      Dir.foreach "#{RAILS_ROOT}/vendor/plugins/somatics_generator/generators/admin_controllers/templates/images/" do |f|
+        m.file "images/#{f}", "public/images/#{f}", :collision => :skip unless f.match(/\./) 
+      end
       
       # Routing
       m.admin_route_root :controller => 'home', :action => 'index'
