@@ -1,0 +1,9 @@
+"zh-TW":
+  activerecord:
+    models:
+      <%=table_name%>: <%=table_name.humanize%>
+    attributes:
+      member:
+      <% attributes.each do |attribute| -%>
+        <%=attribute.name%>: <%=attribute.name.humanize%>
+      <% end %>

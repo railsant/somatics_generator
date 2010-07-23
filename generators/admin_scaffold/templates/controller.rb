@@ -5,9 +5,13 @@ class <%= controller_class_name %>Controller < Admin::AdminController
 <% end -%>
   layout Proc.new { |c| c.request.format.js? ? false : 'admin' }
   
-  # Add Redmine Filter Here
-  # available_filters "id",  {:name => 'Ref No', :type => :integer, :order => 1}
-  # defaut_filter "id", '='
+  # Redmine Filters
+  available_filters :id,  {:name => 'ID', :type => :integer, :order => 1}
+  <% attributes.each_with_index do |attribute, index| -%>
+    # available_filters :<%=attribute.name%>,  {:name => '<%=attribute.name.humanize%>', :type => :<%=attribute.type%>, :order => }
+  <% end -%>
+
+  defaut_filter :id
 
   # GET /<%= table_name %>
   # GET /<%= table_name %>.xml

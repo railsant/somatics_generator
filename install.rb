@@ -56,11 +56,11 @@ Dir.foreach(plugin_images_path) do |image|
   end
 end
 
-puts 'Copying images files...'
+puts 'Copying locales files...'
 # copying locales
 Dir.mkdir(locales_path) unless File.exists?(locales_path) 
 
-plugin_locales_path = File.join(current_path, 'config', 'locales')
+plugin_locales_path = File.join(current_path, 'locales')
 
 Dir.foreach(plugin_locales_path) do |locale|
   src_locale  = File.join(plugin_locales_path, locale)
