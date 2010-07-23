@@ -5,14 +5,12 @@ puts 'Copying files...'
 public_path = File.join(Rails.root, 'public')
 current_path = File.join(File.dirname(__FILE__)) 
 
-puts public_path
-puts current_path
-
 javascripts_path = File.join(public_path, 'javascripts')
 stylesheets_path = File.join(public_path, 'stylesheets')
 images_path      = File.join(public_path, 'images', 'admin')
 locales_path      = File.join(public_path, 'locales')
 
+puts 'Copying javascript files...'
 # copying JS
 Dir.mkdir(javascripts_path) unless File.exists?(javascripts_path) 
 
@@ -27,6 +25,7 @@ Dir.foreach(plugin_javascripts_path) do |javascript|
   end
 end
 
+puts 'Copying stylesheets files...'
 # copying CSS
 Dir.mkdir(stylesheets_path) unless File.exists?(stylesheets_path) 
 
@@ -41,6 +40,7 @@ Dir.foreach(plugin_stylesheets_path) do |stylesheet|
   end
 end
 
+puts 'Copying images files...'
 # copying images
 Dir.mkdir(images_path) unless File.exists?(images_path) 
 
@@ -55,6 +55,7 @@ Dir.foreach(plugin_images_path) do |image|
   end
 end
 
+puts 'Copying images files...'
 # copying locales
 Dir.mkdir(locales_path) unless File.exists?(locales_path) 
 
