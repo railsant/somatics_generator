@@ -14,7 +14,7 @@ puts 'Copying javascript files...'
 # copying JS
 Dir.mkdir(javascripts_path) unless File.exists?(javascripts_path) 
 
-plugin_javascripts_path = File.join(current_path, 'javascripts')
+plugin_javascripts_path = File.join(current_path, 'public', 'javascripts')
 
 Dir.foreach(plugin_javascripts_path) do |javascript|
   src_javascript  = File.join(plugin_javascripts_path, javascript)
@@ -29,7 +29,7 @@ puts 'Copying stylesheets files...'
 # copying CSS
 Dir.mkdir(stylesheets_path) unless File.exists?(stylesheets_path) 
 
-plugin_stylesheets_path = File.join(current_path, 'stylesheets')
+plugin_stylesheets_path = File.join(current_path, 'public', 'stylesheets')
 
 Dir.foreach(plugin_stylesheets_path) do |stylesheet|
   src_stylesheet  = File.join(plugin_stylesheets_path, stylesheet)
@@ -44,7 +44,7 @@ puts 'Copying images files...'
 # copying images
 Dir.mkdir(images_path) unless File.exists?(images_path) 
 
-plugin_images_path = File.join(current_path, 'images')
+plugin_images_path = File.join(current_path, 'public', 'images')
 
 Dir.foreach(plugin_images_path) do |image|
   src_image  = File.join(plugin_images_path, image)
