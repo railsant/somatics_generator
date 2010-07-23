@@ -29,20 +29,22 @@ class AdminControllersGenerator < Rails::Generator::Base
       m.template 'partial_menu.html.erb', File.join('app/views/admin/shared', "_menu.html.erb")
       
       # Stylesheets and Javascripts.
-      m.template_without_destroy 'css_admin.css', 'public/stylesheets/admin.css'
-      m.template_without_destroy 'css_jstoolbar.css', 'public/stylesheets/jstoolbar.css'
-      m.template_without_destroy 'css_context_menu.css', 'public/stylesheets/context_menu.css'
-      m.template_without_destroy 'css_csshover.htc', 'public/stylesheets/csshover.htc'      
-      m.template_without_destroy 'js_context_menu.js', 'public/javascripts/context_menu.js'
-      m.template_without_destroy 'js_select_list_move.js', 'public/javascripts/select_list_move.js'
+      # m.template_without_destroy 'css_admin.css', 'public/stylesheets/admin.css'
+      # m.template_without_destroy 'css_jstoolbar.css', 'public/stylesheets/jstoolbar.css'
+      # m.template_without_destroy 'css_context_menu.css', 'public/stylesheets/context_menu.css'
+      # m.template_without_destroy 'css_csshover.htc', 'public/stylesheets/csshover.htc'      
+      # m.template_without_destroy 'js_context_menu.js', 'public/javascripts/context_menu.js'
+      # m.template_without_destroy 'js_select_list_move.js', 'public/javascripts/select_list_move.js'
       
       # Images
-      Dir.foreach "#{RAILS_ROOT}/vendor/plugins/somatics_generator/generators/admin_controllers/templates/images/" do |f|
-        m.file "images/#{f}", "public/images/#{f}", :collision => :skip
-      end
+      # Dir.foreach "#{RAILS_ROOT}/vendor/plugins/somatics_generator/generators/admin_controllers/templates/images/" do |f|
+      #   m.file "images/#{f}", "public/images/#{f}", :collision => :skip
+      # end
       
       # Mime Types
-      m.template 'mime_types.rb', File.join('config/initializers',"mime_types.rb"), :collision => :force
+      # m.template 'mime_types.rb', File.join('config/initializers',"mime_types.rb"), :collision => :force
+      mime_type('application/vnd.ms-excel',:xls)
+      
       
       # Routing
       m.admin_route_root :controller => 'home', :action => 'index'
@@ -102,6 +104,12 @@ class Rails::Generator::Commands::Create
   def header_menu(resource)
     gsub_file File.join('app/views/layouts', controller_class_path, "_menu.html.erb"), /\z/mi do |match|
       "<li><%= link_to '#{resource.humanize}', '/admin/#{resource}', :class => (match_controller?('#{controller_file_name}'))  ? 'selected' : ''%></li>\n"
+    end
+  end
+  
+  def mime_type(mime_type, extension)
+    gsub_file File.join('config/initializers', 'mime_types.rb'), /\z/mi do |match|
+      "Mime::Type.register '#{mime_type}', :#{extension.to_s}"
     end
   end
   
