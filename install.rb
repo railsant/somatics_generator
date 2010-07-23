@@ -5,6 +5,9 @@ puts 'Copying files...'
 public_path = File.join(Rails.root, 'public')
 current_path = File.join(File.dirname(__FILE__)) 
 
+puts public_path
+puts current_path
+
 javascripts_path = File.join(public_path, 'javascripts')
 stylesheets_path = File.join(public_path, 'stylesheets')
 images_path      = File.join(public_path, 'images', 'admin')
