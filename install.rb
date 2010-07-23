@@ -3,7 +3,7 @@ require 'rubygems'
 puts 'Copying files...'
 
 public_path = File.join(Rails.root, 'public')
-current_path = File.join(File.dirname(__FILE__), 'media') 
+current_path = File.join(File.dirname(__FILE__)) 
 
 javascripts_path = File.join(public_path, 'javascripts')
 stylesheets_path = File.join(public_path, 'stylesheets')
