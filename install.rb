@@ -3,12 +3,13 @@ require 'rubygems'
 puts 'Copying files...'
 
 public_path = File.join(Rails.root, 'public')
+config_path = File.join(Rails.root, 'config')
 current_path = File.join(File.dirname(__FILE__)) 
 
 javascripts_path = File.join(public_path, 'javascripts')
 stylesheets_path = File.join(public_path, 'stylesheets')
 images_path      = File.join(public_path, 'images', 'admin')
-locales_path      = File.join(public_path, 'locales')
+locales_path      = File.join(config_path, 'config', 'locales')
 
 puts 'Copying javascript files...'
 # copying JS
