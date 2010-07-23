@@ -1,11 +1,11 @@
 <table width="100%">
 <tbody>
 	<tr>
-		<td colspan="2"><br/><h3><%=singular_name.humanize%> Information</h3></td>
+		<td colspan="2"><br/><h3><%%=<%=class_name%>.human_name%></h3></td>
 	</tr>
 <% for attribute in attributes -%>
 	<tr>
-	  <td><b><%= attribute.name.humanize %></b></td>
+	  <td><b><%%= <%= class_name %>.human_attribute_name(:<%=attribute.name%>)</b></td>
 	  <td><%%= f.<%= attribute.field_type %> :<%= attribute.name %> %></td>
 	</tr>
 <% end -%>

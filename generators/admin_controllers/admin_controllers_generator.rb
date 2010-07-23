@@ -45,10 +45,6 @@ class AdminControllersGenerator < Rails::Generator::Base
       # m.template 'mime_types.rb', File.join('config/initializers',"mime_types.rb"), :collision => :force
       m.mime_type('application/vnd.ms-excel',:xls)
       
-      # Locales
-      ['zh-TW'].each do |locale|
-        m.template "locales_#{locale}.yml", File.join('config/locales', "#{resource}_#{locale}")
-      end
       
       # Routing
       m.admin_route_root :controller => 'home', :action => 'index'

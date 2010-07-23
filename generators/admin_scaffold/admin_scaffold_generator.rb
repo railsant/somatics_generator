@@ -251,6 +251,11 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
       m.template 'authenticated/signup.html.erb', File.join('app/views', controller_class_path, controller_file_name, "signup.html.erb")
       m.template 'authenticated/_model_partial.html.erb', File.join('app/views', controller_class_path, controller_file_name, "_#{file_name}_bar.html.erb")
       
+      # Locales templates 
+      ['zh-TW'].each do |locale|
+        m.template "locales_#{locale}.yml", File.join('config/locales', "#{controller_file_name}_#{locale}.yml")
+      end
+      
       if options[:include_activation]
         # Mailer templates
         %w( activation signup_notification ).each do |action|

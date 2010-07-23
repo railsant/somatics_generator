@@ -6,10 +6,10 @@ class Admin::AdminController < ActionController::Base
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
   # Scrub sensitive parameters from your log
-  # filter_parameter_logging :password
+  filter_parameter_logging :password
   
   include RedmineFilter
   # before_filter :user_login_required
   
-  layout 'admin'
+  layout Proc.new { |c| c.request.format.js? ? false : 'admin' }
 end

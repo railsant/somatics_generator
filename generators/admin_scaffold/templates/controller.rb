@@ -3,7 +3,6 @@ class <%= controller_class_name %>Controller < Admin::AdminController
   # Be sure to include AuthenticationSystem in Application Controller instead
   include <%= class_name %>AuthenticatedSystem
 <% end -%>
-  layout Proc.new { |c| c.request.format.js? ? false : 'admin' }
   
   # Redmine Filters
   available_filters :id,  {:name => 'ID', :type => :integer, :order => 1}
@@ -11,7 +10,10 @@ class <%= controller_class_name %>Controller < Admin::AdminController
     # available_filters :<%=attribute.name%>,  {:name => '<%=attribute.name.humanize%>', :type => :<%=attribute.type%>, :order => }
   <% end -%>
 
-  defaut_filter :id
+  default_filter :id
+  <% attributes.each do |attribute| -%>
+  # default_filter :<%=attribute.name%>
+  <% end %>
 
   # GET /<%= table_name %>
   # GET /<%= table_name %>.xml
