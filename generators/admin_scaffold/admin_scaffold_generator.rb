@@ -117,7 +117,7 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
       m.template "builder_index.pdf.prawn",   File.join('app/views', controller_class_path, controller_file_name, "index.pdf.prawn")
 
       # Locales templates 
-      ['zh-TW'].each do |locale|
+      %w( zh-TW ).each do |locale|
         m.template "locales_#{locale}.yml", File.join('config/locales', "#{controller_file_name}_#{locale}.yml")
       end
 
@@ -329,7 +329,7 @@ class Rails::Generator::Commands::Create
   
   def header_menu(resource)
     gsub_file File.join('app/views/admin/shared', "_menu.html.erb"), /\z/mi do |match|
-      "<li><%= link_to '#{resource.humanize}', '/admin/#{resource}', :class => (match_controller?('#{controller_file_name}'))  ? 'selected' : ''%></li>\n"
+      "<li><%= link_to #{class_name}.human_name, '/admin/#{resource}', :class => (match_controller?('#{controller_file_name}'))  ? 'selected' : ''%></li>\n"
     end
   end
   

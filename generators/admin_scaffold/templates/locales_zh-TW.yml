@@ -16,5 +16,5 @@ end
     attributes:
       <%=singular_name%>:
       <% attributes.each do |attribute| -%>
-        <%=attribute.name%>: <%=GoogleTranslate.t attribute_name%>
+        <%=attribute.name%>: <%=GoogleTranslate.t attribute.name%>
       <% end %>

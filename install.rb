@@ -6,8 +6,8 @@ public_path = File.join(Rails.root, 'public')
 config_path = File.join(Rails.root, 'config')
 current_path = File.join(File.dirname(__FILE__)) 
 
-javascripts_path = File.join(public_path, 'javascripts')
-stylesheets_path = File.join(public_path, 'stylesheets')
+javascripts_path = File.join(public_path, 'javascripts', 'admin')
+stylesheets_path = File.join(public_path, 'stylesheets', 'admin')
 images_path      = File.join(public_path, 'images', 'admin')
 locales_path      = File.join(config_path, 'locales')
 
