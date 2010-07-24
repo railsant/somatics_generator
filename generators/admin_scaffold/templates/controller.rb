@@ -7,7 +7,7 @@ class <%= controller_class_name %>Controller < Admin::AdminController
   # Redmine Filters
   available_filters :id,  {:name => 'ID', :type => :integer, :order => 1}
   <% attributes.each_with_index do |attribute, index| -%>
-    # available_filters :<%=attribute.name%>,  {:name => '<%=attribute.name.humanize%>', :type => :<%=attribute.type%>, :order => <%=index%>}
+  # available_filters :<%=attribute.name%>,  {:name => '<%=attribute.name.humanize%>', :type => :<%=attribute.type%>, :order => <%=index%>}
   <% end -%>
 
   default_filter :id
