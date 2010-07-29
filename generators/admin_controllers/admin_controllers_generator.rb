@@ -29,6 +29,7 @@ class AdminControllersGenerator < Rails::Generator::Base
       m.template 'partial_menu.html.erb', File.join('app/views/admin/shared', "_menu.html.erb")
       
       # Stylesheets and Javascripts.
+      m.template_without_destroy 'admin.js', 'public/javascripts/admin/admin.js'
       # m.template_without_destroy 'css_admin.css', 'public/stylesheets/admin.css'
       # m.template_without_destroy 'css_jstoolbar.css', 'public/stylesheets/jstoolbar.css'
       # m.template_without_destroy 'css_context_menu.css', 'public/stylesheets/context_menu.css'
