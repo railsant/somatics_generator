@@ -3,6 +3,24 @@
   <tr>
 		<td colspan="2"><br/><h3><%=singular_name.humanize%> Information</h3></td>
 	</tr>
+<% if options[:authenticated] -%>
+	<tr>
+	  <td><b><%= 'Login' %></b></td>
+	  <td><%%=h <%= singular_name %>.login %></td>
+	</tr>
+	<tr>
+	  <td><b><%= 'Name' %></b></td>
+	  <td><%%=h <%= singular_name %>.name %></td>
+	</tr>
+	<tr>
+	  <td><b><%= 'Email' %></b></td>
+	  <td><%%=h <%= singular_name %>.email %></td>
+	</tr>
+	<tr>
+	  <td><b><%= 'Created At' %></b></td>
+	  <td><%%=h <%= singular_name %>.created_at %></td>
+	</tr>
+<% end -%>
 <% for attribute in attributes -%>
 	<tr>
 	  <td><b><%= attribute.name.humanize %></b></td>

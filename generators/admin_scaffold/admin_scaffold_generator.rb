@@ -33,6 +33,8 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
                 :sessions_controller_controller_name         
   alias_method  :sessions_controller_file_name,  :sessions_controller_singular_name
   alias_method  :sessions_controller_table_name, :sessions_controller_plural_name
+  
+  
 
   def initialize(runtime_args, runtime_options = {})
     super
