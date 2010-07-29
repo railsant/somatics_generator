@@ -3,18 +3,18 @@ require 'net/http'
 require 'uri'
 require 'json'
 class GoogleTranslate
-    def self.t(text)
-        uri = URI.parse('http://ajax.googleapis.com/ajax/services/language/translate')
-        JSON.parse(Net::HTTP.post_form(uri, {"q" => text, "langpair" => "en|zh-TW", "v" => '1.0'}).body)['responseData']['translatedText'] rescue text.humanize
-    end
+  def self.t(text)
+    uri = URI.parse('http://ajax.googleapis.com/ajax/services/language/translate')
+    JSON.parse(Net::HTTP.post_form(uri, {"q" => text, "langpair" => "en|zh-TW", "v" => '1.0'}).body)['responseData']['translatedText'] rescue text.humanize
+  end
 end
 -%>
 "zh-TW":
   activerecord:
     models:
-      <%=singular_name%>: <%=GoogleTranslate.t singular_name%>
+      <%=singular_name%>: <%= GoogleTranslate.t singular_name %>
     attributes:
       <%=singular_name%>:
-      <% attributes.each do |attribute| -%>
-        <%=attribute.name%>: <%=GoogleTranslate.t attribute.name%>
-      <% end %>
+<% attributes.each do |attribute| -%>
+        <%=attribute.name%>: <%= GoogleTranslate.t attribute.name %>
+<% end -%>
