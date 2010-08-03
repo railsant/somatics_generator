@@ -3,7 +3,7 @@
   <tr>
 		<td colspan="2"><br/><h3><%%= "#{<%= class_name %>.human_name} #{t('Information')}" %></h3></td>
 	</tr>
-<% if options[:authenticated] -%>
+<% if options[:admin_authenticated] || options[:authenticated] -%>
 	<tr>
 	  <td><b><%%= <%= class_name %>.human_attribute_name(:login) %></b></td>
 	  <td><%%=h <%= singular_name %>.login %></td>

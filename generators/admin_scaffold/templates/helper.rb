@@ -1,5 +1,5 @@
 module <%= controller_class_name %>Helper
-<% if options[:authenticated] -%>
+<% if options[:admin_authenticated] -%>
   #
   # Use this to wrap view elements that the user can't access.
   # !! Note: this is an *interface*, not *security* feature !!

@@ -3,6 +3,7 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
                   :skip_migration => false, 
                   :force_plural => false,
                   :authenticated => false,
+                  :admin_authenticated => false,
                   :include_activation => false
 
   attr_reader   :controller_name,
@@ -249,17 +250,17 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
       m.template 'authenticated/authenticated_test_helper.rb', File.join('lib', "#{file_name}_authenticated_test_helper.rb")
       m.template_without_destroy 'authenticated/site_keys.rb', site_keys_file
       
-      m.template 'authenticated/test/sessions_functional_test.rb', File.join('test/functional', options[:admin_authenticated] ? 'admin' : '', sessions_controller_class_path, "#{@sessions_controller_file_name}_controller_test.rb")
+      m.template 'authenticated/test/sessions_functional_test.rb', File.join('test/functional', sessions_controller_class_path, "#{@sessions_controller_file_name}_controller_test.rb")
       m.template 'authenticated/test/mailer_test.rb', File.join('test/unit', class_path, "#{file_name}_mailer_test.rb") if options[:include_activation]
       m.template 'authenticated/test/unit_test.rb', File.join('test/unit', class_path, "#{file_name}_test.rb")
 
       m.template 'authenticated/test/users.yml', File.join('test/fixtures', class_path, "#{table_name}.yml")                            
-      m.template 'authenticated/helper.rb', File.join('app/helpers', sessions_controller_class_path, "#{@sessions_controller_file_name}_helper.rb")
+      m.template 'authenticated/session_helper.rb', File.join('app/helpers', sessions_controller_class_path, "#{@sessions_controller_file_name}_helper.rb")
 
       # View templates
       m.template 'authenticated/login.html.erb',  File.join('app/views', sessions_controller_class_path, @sessions_controller_file_name, "new.html.erb")
-      m.template 'authenticated/signup.html.erb', File.join('app/views', controller_class_path, controller_file_name, "signup.html.erb")
-      m.template 'authenticated/_model_partial.html.erb', File.join('app/views', controller_class_path, controller_file_name, "_#{file_name}_bar.html.erb")
+      # m.template 'authenticated/signup.html.erb', File.join('app/views', controller_class_path, controller_file_name, "signup.html.erb")
+      # m.template 'authenticated/_model_partial.html.erb', File.join('app/views', controller_class_path, controller_file_name, "_#{file_name}_bar.html.erb")
 
       if options[:include_activation]
         # Mailer templates
@@ -284,11 +285,16 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
           m.admin_route_name("#{file_name}_logout",   "/#{controller_plural_name}/logout",   {:controller => sessions_controller_controller_name, :action => 'destroy'})
         else 
           # Note that this fails for nested classes -- you're on your own with setting up the routes.
+          m.template 'authenticated/controller.rb', File.join('app/controllers', "#{@controller_plural_name}_controller.rb")
+          m.template 'authenticated/helper.rb', File.join('app/helpers', "#{@controller_plural_name}_helper.rb")
+          m.directory File.join('app/views', controller_file_name)
+          m.template 'authenticated/signup.html.erb', File.join('app/views', controller_file_name, "new.html.erb")
+          m.template 'authenticated/_model_partial.html.erb', File.join('app/views', controller_file_name, "_#{file_name}_bar.html.erb")
           m.route_resource  sessions_controller_singular_name
-          m.route_name('signup',   '/signup',   {:controller => controller_plural_name, :action => 'new'})
-          m.route_name('register', '/register', {:controller => controller_plural_name, :action => 'create'})
-          m.route_name('login',    '/login',    {:controller => sessions_controller_controller_name, :action => 'new'})
-          m.route_name('logout',   '/logout',   {:controller => sessions_controller_controller_name, :action => 'destroy'})
+          m.route_name("#{file_name}_signup",   "/#{controller_plural_name}/signup",    {:controller => controller_plural_name, :action => 'new'})
+          m.route_name("#{file_name}_register", "/#{controller_plural_name}/register",  {:controller => controller_plural_name, :action => 'create'})
+          m.route_name("#{file_name}_login",    "/#{controller_plural_name}/login",    {:controller => sessions_controller_controller_name, :action => 'new'})
+          m.route_name("#{file_name}_logout",   "/#{controller_plural_name}/logout",    {:controller => sessions_controller_controller_name, :action => 'destroy'})
         end
       end                     
     end

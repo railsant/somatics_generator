@@ -3,7 +3,7 @@
 		<tr>
       <!-- <th><%%#= link_to image_tag('toggle_check.png', :alt => "Toggle_check"), admin_<%= plural_name %>_path, :onclick => "toggleIssuesSelection(Element.up(this, &quot;form&quot;)); return false;", :title => "Check all/Uncheck all" %></th> -->
       <th title="Sort by &quot;#&quot;"><%%= sort_link_helper t('ID'), '<%=singular_name%>', 'id' %></th>
-<% if options[:authenticated] -%>
+<% if options[:admin_authenticated] || options[:authenticated] -%>
       <th title="Sort by &quot;Login&quot;"><%%= sort_link_helper <%= class_name %>.human_attribute_name(:login), '<%=singular_name%>', 'login' %></th>
 	    <th title="Sort by &quot;Name&quot;"><%%= sort_link_helper <%= class_name %>.human_attribute_name(:name), '<%=singular_name%>', 'name' %></th>
 	    <th title="Sort by &quot;Email&quot;"><%%= sort_link_helper <%= class_name %>.human_attribute_name(:email), '<%=singular_name%>', 'email' %></th>
@@ -21,7 +21,7 @@
 		<tr id="<%% dom_id(<%=singular_name%>)%>" class="hascontextmenu <%%= cycle 'odd' , 'even' %> issue">
       <!-- <td class="checkbox"><input name="ids[]" type="checkbox" value="<%%#= <%=singular_name%>.id %>" /></td> -->
       <td onclick="link_to(<%%= "'#{admin_<%=singular_name%>_path(<%=singular_name%>)}'" %>);"><%%= link_to <%= singular_name %>.id, [:admin, <%= singular_name %>]%></td>
-<% if options[:authenticated] -%>
+<% if options[:admin_authenticated] || options[:authenticated] -%>
       <td onclick="link_to(<%%= "'#{admin_<%=singular_name%>_path(<%=singular_name%>)}'" %>);" class="login"><%%=h <%= singular_name %>.login %></td>
       <td onclick="link_to(<%%= "'#{admin_<%=singular_name%>_path(<%=singular_name%>)}'" %>);" class="name"><%%=h <%= singular_name %>.name %></td>
       <td onclick="link_to(<%%= "'#{admin_<%=singular_name%>_path(<%=singular_name%>)}'" %>);" class="email"><%%=h <%= singular_name %>.email %></td>
