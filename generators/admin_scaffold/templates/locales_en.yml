@@ -1,0 +1,17 @@
+en:
+  activerecord:
+    models:
+      <%= singular_name %>: <%= singular_name.humanize %>
+    attributes:
+      <%= singular_name %>:
+<% if options[:authenticated] -%>
+        login: Login
+        name: Name
+        email: Email
+        created_at: Created At
+        password: Password
+        password_confirmation: Password Confirmation
+<% end -%>
+<% attributes.each do |attribute| -%>
+        <%= attribute.name %>: <%= attribute.name.humanize %>
+<% end -%>

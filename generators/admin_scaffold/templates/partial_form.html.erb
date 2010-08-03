@@ -1,27 +1,27 @@
 <table width="100%">
 <tbody>
 	<tr>
-		<td colspan="2"><br/><h3><%%=<%=class_name%>.human_name %></h3></td>
+		<td colspan="2"><br/><h3><%%= <%=class_name %>.human_name %></h3></td>
 	</tr>
 <% if options[:authenticated] -%>
 	<tr>
-	  <td><b><%= 'Login' %></b></td>
+	  <td><b><%%= <%= class_name %>.human_attribute_name(:login) %></b></td>
 	  <td><%%= f.text_field :login %></td>
 	</tr>
 	<tr>
-	  <td><b><%= 'Name' %></b></td>
+	  <td><b><%%= <%= class_name %>.human_attribute_name(:name) %></b></td>
 	  <td><%%= f.text_field :name %></td>
 	</tr>
 	<tr>
-	  <td><b><%= 'Email' %></b></td>
+	  <td><b><%%= <%= class_name %>.human_attribute_name(:email) %></b></td>
 	  <td><%%= f.text_field :email %></td>
 	</tr>
 	<tr>
-	  <td><b><%= 'Password' %></b></td>
+	  <td><b><%%= <%= class_name %>.human_attribute_name(:password) %></b></td>
 	  <td><%%= f.password_field :password %></td>
 	</tr>
 	<tr>
-	  <td><b><%= 'Password Confirmation' %></b></td>
+	  <td><b><%%= <%= class_name %>.human_attribute_name(:password_confirmation) %></b></td>
 	  <td><%%= f.password_field :password_confirmation %></td>
 	</tr>
 <% end -%>

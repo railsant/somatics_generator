@@ -59,16 +59,16 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
     @controller_routing_path  = @controller_file_path.singularize
     @controller_controller_name = @controller_plural_name
     
-    if options[:authenticated]
+    if options[:admin_authenticated] || options[:authenticated]
       require File.expand_path(File.dirname(__FILE__) + "/lib/insert_routes.rb")
       require 'digest/sha1'
       initialize_sessions_controller_name
-      load_or_initialize_site_keys
-    end     
+      load_or_initialize_site_keys  
+    end
   end
   
   def initialize_sessions_controller_name
-    @sessions_controller_name = "#{@controller_name}_sessions"
+    @sessions_controller_name = "#{'admin/' if options[:admin_authenticated]}#{@name.pluralize}_sessions"
     base_name, @sessions_controller_class_path, @sessions_controller_file_path, @sessions_controller_class_nesting, @sessions_controller_class_nesting_depth = extract_modules(@sessions_controller_name)
     @sessions_controller_class_name_without_nesting, @sessions_controller_file_name, @sessions_controller_plural_name = inflect_names(base_name)
     @sessions_controller_singular_name = @sessions_controller_file_name.singularize
@@ -93,7 +93,6 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
       m.directory(File.join('app/controllers', controller_class_path))
       m.directory(File.join('app/helpers', controller_class_path))
       m.directory(File.join('app/views', controller_class_path, controller_file_name))
-      m.directory(File.join('app/views/layouts', controller_class_path))
       m.directory(File.join('app/views', controller_class_path, "shared"))
       m.directory(File.join('test/functional', controller_class_path))
       m.directory(File.join('test/unit', class_path))
@@ -119,7 +118,7 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
       m.template "builder_index.pdf.prawn",   File.join('app/views', controller_class_path, controller_file_name, "index.pdf.prawn")
 
       # Locales templates 
-      %w( zh-TW ).each do |locale|
+      %w( en zh-TW ).each do |locale|
         m.template "locales_#{locale}.yml", File.join('config/locales', "#{controller_file_name}_#{locale}.yml")
       end
 
@@ -127,7 +126,7 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
       # m.template_without_destroy 'layout.html.erb', File.join('app/views/layouts', controller_class_path, "admin.html.erb"), :collision => :skip
       # m.template_without_destroy 'application_helper.rb', File.join('app/helpers', controller_class_path, "admin_helper.rb"), :collision => :skip
       # m.template_without_destroy 'partial_menu.html.erb', File.join('app/views', controller_class_path, "shared", "_menu.html.erb"), :collision => :skip
-      m.header_menu(controller_file_name)
+      m.header_menu(controller_file_name) unless options[:no_header_menu]
       # m.template_without_destroy 'context_menu.js', 'public/javascripts/context_menu.js', :collision => :skip
       # m.template_without_destroy 'select_list_move.js', 'public/javascripts/select_list_move.js', :collision => :skip
       # m.template('style.css', 'public/stylesheets/scaffold.css')
@@ -137,9 +136,12 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
 
       m.admin_route_resources controller_file_name
 
-      m.dependency 'model', [name] + @args, :collision => :skip unless options[:authenticated]
-      
-      generate_sessions_controller(m) if options[:authenticated]
+      if options[:admin_authenticated] || options[:authenticated]
+        generate_sessions_controller(m)
+      else
+        m.dependency 'model', [name] + @args, :collision => :skip 
+      end
+
     end
   end
 
@@ -202,13 +204,14 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
              "Don't generate a migration file for this model") { |v| options[:skip_migration] = v }
       opt.on("--force-plural",
              "Forces the generation of a plural ModelName") { |v| options[:force_plural] = v }
-      opt.on("--use_layout",
-             "Generate controller specific layout") { |v| options[:use_controller_layout] = v }
+      opt.on("--admin-authenticated",
+             "Generate authenticated model") { |v| options[:admin_authenticated] = true }
       opt.on("--authenticated",
-             "Generate authenticated model") { |v| options[:authenticated] = true }
+            "Generate authenticated model") { |v| options[:authenticated] = true }
       opt.on("--include-activation",
              "Generate signup 'activation code' confirmation via email") { |v| options[:include_activation] = true }
-             
+      opt.on("--no-header",
+             "Will Not Generate admin header menu") {|v| options[:no_header_menu] = true}
     end
 
     def model_name
@@ -244,9 +247,9 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
 
       m.template 'authenticated/authenticated_system.rb', File.join('lib', "#{file_name}_authenticated_system.rb")
       m.template 'authenticated/authenticated_test_helper.rb', File.join('lib', "#{file_name}_authenticated_test_helper.rb")
-      m.template 'authenticated/site_keys.rb', site_keys_file
+      m.template_without_destroy 'authenticated/site_keys.rb', site_keys_file
       
-      m.template 'authenticated/test/sessions_functional_test.rb', File.join('test/functional', sessions_controller_class_path, "#{@sessions_controller_file_name}_controller_test.rb")
+      m.template 'authenticated/test/sessions_functional_test.rb', File.join('test/functional', options[:admin_authenticated] ? 'admin' : '', sessions_controller_class_path, "#{@sessions_controller_file_name}_controller_test.rb")
       m.template 'authenticated/test/mailer_test.rb', File.join('test/unit', class_path, "#{file_name}_mailer_test.rb") if options[:include_activation]
       m.template 'authenticated/test/unit_test.rb', File.join('test/unit', class_path, "#{file_name}_test.rb")
 
@@ -272,12 +275,21 @@ class AdminScaffoldGenerator < Rails::Generator::NamedBase
       end
 
       unless options[:skip_routes]
-        # Note that this fails for nested classes -- you're on your own with setting up the routes.
-        m.admin_route_resource  sessions_controller_singular_name
-        m.admin_route_name("#{file_name}_signup",   "/#{controller_plural_name}/signup",   {:controller => controller_plural_name, :action => 'signup'})
-        m.admin_route_name("#{file_name}_register", "/#{controller_plural_name}/register", {:controller => controller_plural_name, :action => 'register'})
-        m.admin_route_name("#{file_name}_login",    "/#{controller_plural_name}/login",    {:controller => sessions_controller_controller_name, :action => 'new'})
-        m.admin_route_name("#{file_name}_logout",   "/#{controller_plural_name}/logout",   {:controller => sessions_controller_controller_name, :action => 'destroy'})
+        if options[:admin_authenticated]
+          # Note that this fails for nested classes -- you're on your own with setting up the routes.
+          m.admin_route_resource  sessions_controller_singular_name
+          m.admin_route_name("#{file_name}_signup",   "/#{controller_plural_name}/signup",   {:controller => controller_plural_name, :action => 'signup'})
+          m.admin_route_name("#{file_name}_register", "/#{controller_plural_name}/register", {:controller => controller_plural_name, :action => 'register'})
+          m.admin_route_name("#{file_name}_login",    "/#{controller_plural_name}/login",    {:controller => sessions_controller_controller_name, :action => 'new'})
+          m.admin_route_name("#{file_name}_logout",   "/#{controller_plural_name}/logout",   {:controller => sessions_controller_controller_name, :action => 'destroy'})
+        else 
+          # Note that this fails for nested classes -- you're on your own with setting up the routes.
+          m.route_resource  sessions_controller_singular_name
+          m.route_name('signup',   '/signup',   {:controller => controller_plural_name, :action => 'new'})
+          m.route_name('register', '/register', {:controller => controller_plural_name, :action => 'create'})
+          m.route_name('login',    '/login',    {:controller => sessions_controller_controller_name, :action => 'new'})
+          m.route_name('logout',   '/logout',   {:controller => sessions_controller_controller_name, :action => 'destroy'})
+        end
       end                     
     end
 end
@@ -344,7 +356,7 @@ class Rails::Generator::Commands::Destroy
     look_for = "\n    admin.resource #{resource_list}"
     logger.route "admin.resource #{resource_list}"
     unless options[:pretend]
-      gsub_file 'config/routes.rb', /(#{look_for})/mi, ''
+      gsub_file 'config/routes.rb', /(Regexp.escape(look_for))/mi, ''
     end
   end
   
@@ -353,7 +365,7 @@ class Rails::Generator::Commands::Destroy
     look_for = "\n    admin.resources #{resource_list}, :collection => {:bulk => :post}"
     logger.route "admin.resources #{resource_list}"
     unless options[:pretend]
-      gsub_file 'config/routes.rb', /(#{look_for})/mi, ''
+      gsub_file 'config/routes.rb', /(Regexp.escape(look_for))/mi, ''
     end
   end
   
@@ -361,7 +373,7 @@ class Rails::Generator::Commands::Destroy
     look_for =   "\n    admin.#{name} '#{path}', :controller => '#{route_options[:controller]}', :action => '#{route_options[:action]}'"
     logger.route "admin.#{name} '#{path}',     :controller => '#{route_options[:controller]}', :action => '#{route_options[:action]}'"
     unless options[:pretend]
-      gsub_file    'config/routes.rb', /(#{look_for})/mi, ''
+      gsub_file    'config/routes.rb', /(Regexp.escape(look_for))/mi, ''
     end
   end
   
@@ -376,7 +388,7 @@ class Rails::Generator::Commands::Destroy
   
   def header_menu(resource)
     # resource_list = resources.map { |r| r.to_sym.inspect }.join(', ')
-    look_for = "<li><%= link_to '#{resource.humanize}', '/admin/#{resource}', :class => (match_controller?('#{controller_file_name}'))  ? 'selected' : ''%></li>\n"
+    look_for = "<li><%= link_to #{class_name}.human_name, '/admin/#{resource}', :class => (match_controller?('#{controller_file_name}'))  ? 'selected' : ''%></li>\n"
     gsub_file File.join('app/views/admin/shared', "_menu.html.erb"), /(#{Regexp.escape(look_for)})/mi, ''
   end
   
@@ -394,4 +406,3 @@ class Rails::Generator::Commands::List
     logger.route "map.#{name} '#{path}', :controller => '{options[:controller]}', :action => '#{options[:action]}'"
   end
 end
-

@@ -9,7 +9,8 @@ class Admin::AdminController < ActionController::Base
   filter_parameter_logging :password
   
   include RedmineFilter
-  # before_filter :user_login_required
+  include UserAuthenticatedSystem
+  before_filter :user_login_required
   
   layout Proc.new { |c| c.request.format.js? ? false : 'admin' }
 end

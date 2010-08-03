@@ -1,12 +1,12 @@
-<%% form_tag admin_<%= sessions_controller_routing_name %>_path, :id => 'login-form' do %>
+<%% form_tag <%='admin_' if options[:admin_authenticated] %><%= sessions_controller_routing_name %>_path, :id => 'login-form' do %>
 <table>
   <tbody>
     <tr>
-      <td align="right"><%%= label_tag 'login' %></td>
+      <td align="right"><b><%%= <%= class_name %>.human_attribute_name(:login) %></b></td>
       <td align="left"><%%= text_field_tag 'login', @login %></td>
     </tr>
     <tr>
-      <td align="right"><%%= label_tag 'password' %></td>
+      <td align="right"><b><%%= <%= class_name %>.human_attribute_name(:password) %></b></td>
       <td align="left"><%%= password_field_tag 'password', nil %></td>
     </tr>
     <!-- Uncomment this if you want this functionality
@@ -21,7 +21,7 @@
     </tr>
     <tr>
       <td align="left"></td>
-      <td align="right"><%%= submit_tag 'Log in' %></td>
+      <td align="right"><%%= submit_tag t('Log_in') %></td>
     </tr>    
   </tbody>
 </table>

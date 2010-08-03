@@ -1,2 +1,31 @@
 en:
-  overview: Overview
+  Overview: Overview
+  new: new
+  New: New
+  create: create
+  Create: Create
+  update: update
+  Update: Update
+  delete: delete
+  Delete: Delete
+  back: back
+  Back: Back
+  back_to: back to
+  Back_to: Back to
+  information: information
+  Information: Information
+  bulk: bulk
+  Bulk: Bulk
+  ID: ID
+  Logged_in_as: Logged in as
+  Logout: Logout
+  Home: Home
+  Admin_Panel: Admin Panel
+  Support: Support
+  Loading: Loading
+  Search: Search
+  Also_available_in: Also available in
+  Log_in: Log in
+  previous: Previous
+  next: Next
+  no_data_available: No Data Available

@@ -1,0 +1,28 @@
+<table class="list issues">
+	<thead>
+		<tr>
+      <th title="Sort by &quot;#&quot;"><%%= sort_link_helper t('ID'), '<%=singular_name%>', 'id' %></th>
+<% %w(name value description).each do |attribute| -%>
+      <th title="Sort by &quot;<%= attribute.humanize %>&quot;"><%%= sort_link_helper <%= class_name %>.human_attribute_name(:<%= attribute %>), '<%=singular_name%>', '<%= attribute %>' %></th>
+<% end -%>
+      <!-- More Sort Link Helper -->
+		</tr>
+	</thead>
+	<tbody>
+	<%% unless <%= plural_name %>.empty? %>
+		<%% for <%= singular_name %> in <%= plural_name %> %>		
+		<tr id="<%% dom_id(<%=singular_name%>)%>" class="hascontextmenu <%%= cycle 'odd' , 'even' %> issue">
+      <td onclick="link_to(<%%= "'#{admin_<%=singular_name%>_path(<%=singular_name%>)}'" %>);"><%%= link_to <%= singular_name %>.id, [:admin, <%= singular_name %>]%></td>
+<% %w(name value description).each do |attribute| -%>
+      <td onclick="link_to(<%%= "'#{admin_<%=singular_name%>_path(<%=singular_name%>)}'" %>);" class="<%= attribute %>"><%%=h <%= singular_name %>.<%= attribute %> %></td>
+<% end -%>
+      <!-- More Fields -->
+    </tr>		  
+		<%% end %>
+	<%% else -%>
+		<tr class="datos"> 
+		  <td colspan="100" align="center">No Data available</td> 
+		</tr> 
+	<%% end -%>	
+  </tbody>
+</table>

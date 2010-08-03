@@ -1,6 +1,5 @@
 <div class="contextual">
   <%%= link_to t('Update'), edit_admin_<%= singular_name %>_path(@<%= singular_name %>), :accesskey => "e", :class => "icon icon-edit", :onclick => "showAndScrollTo('update','focus'); return false;"%>
-  <%%= link_to t('Delete'), [:admin,@<%= singular_name %>], :confirm => 'Are you sure?', :method => :delete ,:class => 'icon icon-del' %>
 </div>
 
 <h2><%%= "#{<%= class_name %>.human_name} ##{@<%= singular_name %>.id}" %></h2>
@@ -11,7 +10,7 @@
 
 <!-- More List View -->
 
-<div id="update" style="display:none;">
+<div id="update">
   <h3><%%= t('Update') %></h3>
   <div id="focus"></div>
   <%%= render :partial => 'edit' , :locals => {:<%= singular_name %> => @<%= singular_name %>} %>

@@ -1,0 +1,15 @@
+<table width="100%">
+<tbody>
+	<tr>
+		<td colspan="2"><br/><h3><%%= <%= class_name %>.human_name %></h3></td>
+	</tr>
+	<tr>
+	  <td><b><%%= <%= class_name %>.human_attribute_name(:name) %></b></td>
+	  <td><%%=h @<%= singular_name %>.name %></td>
+	</tr>	
+	<tr>
+	  <td><b><%%= <%= class_name %>.human_attribute_name(:value) %></b></td>
+	  <td><%%= f.send(@<%= singular_name %>.input_field_type, :value) %></td>
+	</tr>
+</tbody>
+</table>

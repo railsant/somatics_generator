@@ -1,0 +1,9 @@
+en:
+  activerecord:
+    models:
+      <%= singular_name %>: <%= singular_name.humanize %>
+    attributes:
+      <%= singular_name %>:
+<% attributes.each do |attribute| -%>
+        <%= attribute.name %>: <%= attribute.name.humanize %>
+<% end -%>

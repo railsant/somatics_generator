@@ -1,6 +1,5 @@
 <div class="contextual">
   <%%= link_to t('Update'), edit_admin_<%= singular_name %>_path(@<%= singular_name %>), :accesskey => "e", :class => "icon icon-edit", :onclick => "showAndScrollTo('update','focus'); return false;"%>
-  <%%= link_to t('Delete'), [:admin,@<%= singular_name %>], :confirm => 'Are you sure?', :method => :delete ,:class => 'icon icon-del' %>
 </div>
 
 <h2><%%= "#{<%= class_name %>.human_name} ##{@<%= singular_name %>.id}" %></h2>

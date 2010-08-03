@@ -47,7 +47,7 @@ class AdminControllersGenerator < Rails::Generator::Base
       m.mime_type('application/vnd.ms-excel',:xls)
       
       %w( en zh-TW ).each do |locale|
-        m.template "locales_#{locale}.yml", File.join('config/locales', "admin_#{locale}")
+        m.template "locales_#{locale}.yml", File.join('config/locales', "admin_#{locale}.yml")
       end
       
       # Routing

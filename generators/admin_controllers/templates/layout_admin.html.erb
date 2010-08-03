@@ -31,26 +31,26 @@
         <%% if current_user %>
         <div id="account">
           <ul>
-            <li>Logged in as <%%= link_to current_user.name, admin_user_url(current_user) %></li>
-            <li><%%= link_to 'Logout', admin_user_logout_url %></li>
+            <li><%%= t('Logged_in_as') %> <%%= link_to current_user.name, admin_user_url(current_user) %></li>
+            <li><%%= link_to t('Logout'), admin_user_logout_url %></li>
           </ul>
         </div>
         <%% end %>
         <ul>
-          <li><%%= link_to 'Home', '/' %></li>
-          <li><%%= link_to 'Admin Panel', admin_root_path %></li>
-          <li><%%= link_to 'Support', 'http://support.inspiresynergy.com', :class => 'supports' %></li>
+          <li><%%= link_to t('Home'), '/' %></li>
+          <li><%%= link_to t('Admin_Panel'), admin_root_path %></li>
+          <li><%%= link_to t('Support'), 'http://support.inspiresynergy.com', :class => 'supports' %></li>
         </ul>
       </div> <!-- End of Top Menu -->
       <div id="header">
-        <div id="quick-search">
+        <!-- <div id="quick-search">
           <form action="" method="get">
             <input name="" type="hidden" value="1" />
-            <a href="" accesskey="4">Search</a>:
+            <a href="" accesskey="4"><%#= t('Search') %></a>:
               <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
           </form>
-        </div>
-        <h1>Somatics - Admin Panel</h1>
+        </div> -->
+        <h1>Somatics - <%%= t('Admin_Panel') %></h1>
         <%% if current_user %>
         <div id="main-menu">
           <ul>
@@ -77,7 +77,7 @@
           <%% end %>
           <%%= yield %>
         </div> <!-- End of Content -->
-        <div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+        <div id="ajax-indicator" style="display:none;"><span><%%= t('Loading') %>...</span></div>
 	      <div id="footer">
           <div class="bgl">
             <div class="bgr">

@@ -1,5 +1,5 @@
 # This controller handles the login/logout function of the site.  
-class <%= sessions_controller_class_name %>Controller < Admin::AdminController
+class <%= sessions_controller_class_name %>Controller < <%= options[:admin_authenticated] ? "Admin::AdminController" : "ApplicationController" %>
   # Be sure to include AuthenticationSystem in Application Controller instead
   include <%= class_name %>AuthenticatedSystem
   skip_before_filter :<%= file_name %>_login_required

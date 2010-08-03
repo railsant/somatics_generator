@@ -1,0 +1,13 @@
+<table class="attributes" width="100%">
+<tbody> 
+  <tr>
+		<td colspan="2"><br/><h3><%%= "#{<%= class_name %>.human_name} #{t('Information')}" %></h3></td>
+	</tr>
+<% for attribute in attributes -%>
+	<tr>
+	  <td><b><%%= <%= class_name %>.human_attribute_name(:<%= attribute.name %>) %></b></td>
+	  <td><%%=h <%= singular_name %>.<%= attribute.name %> %></td>
+	</tr>
+<% end -%>
+</tbody>
+</table>

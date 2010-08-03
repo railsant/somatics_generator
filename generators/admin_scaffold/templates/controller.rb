@@ -22,7 +22,7 @@ class <%= controller_class_name %>Controller < Admin::AdminController
     @headers = <%= attributes.collect {|attribute| attribute.name.humanize}.inspect %>
     respond_to do |format|
       format.html {
-        @<%= table_name %> = <%= class_name %>.paginate(:page => params[:page], :conditions => query_statement, :order => (params[:sort].gsub('_reverse', ' DESC') unless params[:sort].blank?))
+        @<%= table_name %> = <%= class_name %>.paginate(:page => params[:<%= table_name %>_page], :conditions => query_statement, :order => (params[:<%= singular_name %>_sort].gsub('_reverse', ' DESC') unless params[:<%= singular_name %>_sort].blank?))
       }
       format.xml { 
         @<%= table_name %> = <%= class_name %>.all(:conditions => query_statement)

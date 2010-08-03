@@ -11,13 +11,21 @@ class SomaticLinkRenderer < WillPaginate::LinkRenderer
     @options[:container] ? @template.content_tag(:p, html, html_attributes) : html
   end
   
+  def prepare(collection, options, template)
+    super
+    @collection_name = template.controller.controller_name
+    @param_name = "#{@collection_name}_page"
+    @options[:previous_label] = I18n.t(:previous)
+    @options[:next_label] = I18n.t(:next)
+  end
+  
 protected
 
   def page_link(page, text, attributes = {})
     # @template.content_tag(:li, @template.link_to(text, url_for(page)), attributes)
     # @template.link_to(text, url_for(page), attributes)
     @template.link_to_remote(text,{
-        :url => {:action => 'list', :params => @template.params.merge({:page => page})},
+        :url => url_for(page),
         :update => 'content',
         :method => :get
     },attributes.merge({

@@ -18,25 +18,25 @@ module Admin::AdminHelper
     controller.action_name == name
   end
 
-  def sort_asc_desc_helper(param)
-    result = image_tag('sort_asc.png') if params[:sort] == param
-    result = image_tag('sort_desc.png') if params[:sort] == param + "_reverse"
+  def sort_asc_desc_helper(model_name, param)
+    result = image_tag('admin/sort_asc.png') if params[:"#{model_name}_sort"] == param
+    result = image_tag('admin/sort_desc.png') if params[:"#{model_name}_sort"] == param + "_reverse"
     return result || ''
   end
 
-  def sort_link_helper(text, param)
+  def sort_link_helper(text, model_name ,param)
     key = param
-    key += "_reverse" if params[:sort] == param
+    key += "_reverse" if params[:"#{model_name}_sort"] == param
     options = {
-      :url => {:action => 'list', :params => params.merge({:sort => key, :page => nil})},
+      :url => {:action => 'list', :params => params.merge({:"#{model_name}_sort" => key, :page => nil})},
       :update => 'content',
 	    :method => :get
     }
     html_options = {
       :title => "Sort by this field",
-      :href => url_for(:action => 'list', :params => params.merge({:sort => key, :page => nil}))
+      :href => url_for(:action => 'list', :params => params.merge({:"#{model_name}_sort" => key, :page => nil}))
     }
-    link_to_remote(text + sort_asc_desc_helper(param), options, html_options)
+    link_to_remote(text + sort_asc_desc_helper(model_name,param), options, html_options)
   end
 
   def operators_for_select(filter_type)
