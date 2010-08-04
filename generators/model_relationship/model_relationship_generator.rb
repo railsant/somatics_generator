@@ -35,8 +35,10 @@ class ModelRelationshipGenerator < Rails::Generator::NamedBase
     record do |m|
       m.add_relationship_to_model
       m.add_list_view_to_model_show if relationship == 'has_many'
+      m.add_show_view_to_model_show if relationship == 'belongs_to'
       m.dependency 'admin_attributes', [@migration_model_name, "#{migration_attribute}:integer"], :skip_migration => true unless options[:skip_views]
-      unless options[:skip_migration]
+      # raise 'migration_exists' if m.migration_exists?("add_#{migration_attribute}_to_#{migration_table_name}")
+      unless options[:skip_migration] 
         m.migration_template 'migration.rb', "db/migrate", {
           :assigns => {
             :migration_name => "add_#{migration_attribute}_to_#{migration_table_name}",
@@ -76,9 +78,52 @@ class Rails::Generator::Commands::Create
     logger.insert relation
   end
   
+  def add_show_view_to_model_show
+    sentinel = "<!-- More List View -->\n"
+    reference_list = <<-CODE
+<% if @#{model_name}.#{reference_value} %>
+<h3><%=link_to "\#{#{reference_class_name}.human_name} #\#{@#{model_name}.#{reference_value}.id}", [:admin, @#{model_name}.#{reference_value}] %></h3>
+<div class="issue detail">
+	<%= render :partial => 'admin/#{reference_model_name.pluralize}/show' , :locals => {:#{reference_value} => @#{model_name}.#{reference_value}} %>
+</div>
+<% end %>
+    CODE
+    gsub_file File.join('app/views/admin', model_name.pluralize, 'show.html.erb'), /(#{Regexp.escape(sentinel)})/mi do |match|
+      "#{match}#{reference_list}"
+    end
+    logger.update File.join('app/views/admin', model_name.pluralize, 'show.html.erb')
+    gsub_file File.join('app/views/admin', model_name.pluralize, 'edit.html.erb'), /(#{Regexp.escape(sentinel)})/mi do |match|
+      "#{match}#{reference_list}"
+    end
+    logger.update File.join('app/views/admin', model_name.pluralize, 'edit.html.erb')
+  end
+  
   def add_list_view_to_model_show
     sentinel = "<!-- More List View -->\n"
-    reference_list = "<h3>#{reference_model_name.humanize} List</h3>\n<%= render :partial => 'admin/#{reference_value}/list', :locals => {:#{reference_value} => @#{model_name}.#{reference_value}.all(:page => params[:#{reference_model_name}_page], :order => (params[:#{refence_model_name}_sort].gsub('_reverse', ' DESC') unless params[:#{refence_model_name}_sort].blank?))} %>\n"
+    reference_list = <<-CODE
+<div class="contextual">
+  <%= link_to "\#{t 'Add'} \#{#{reference_class_name}.human_name}", '#', :class => "icon icon-add", :onclick => "showAndScrollTo('add_#{reference_model_name}','focus_#{reference_model_name}'); return false;"%>
+</div>
+<h3><%=#{reference_class_name}.human_name%></h3>
+<% @#{reference_value} = @#{model_name}.#{reference_value}.paginate(:page => params[:#{reference_model_name}_page], :order => (params[:#{reference_model_name}_sort].gsub('_reverse', ' DESC') unless params[:#{reference_model_name}_sort].blank?))%>
+<div class="autoscroll">
+  <%= render :partial => 'admin/#{reference_value}/list', :locals => {:#{reference_value} => @#{reference_value}} %>
+</div>
+<%= will_paginate @#{reference_value}, :renderer => SomaticLinkRenderer %>
+<div id="add_#{reference_model_name}" style="display:none">
+  <h3><%= "\#{t('New')} \#{#{reference_class_name}.human_name}" %></h3>
+  <div id="focus_#{reference_model_name}"></div>
+  <% form_for([:admin, @#{model_name}.#{reference_value}.build]) do |f| %>
+    <%= f.error_messages %>
+    <div class="issue">
+      <%= render :partial => 'admin/#{reference_value}/form' , :locals => {:f => f} %>
+    </div>
+    <%= hidden_field_tag :return_to, url_for%>
+    <%= f.submit t('Create') %>
+  <% end %>
+  <%= link_to_function t('Cancel'), "$('add_#{reference_model_name}').hide()"%>
+</div>
+CODE
     gsub_file File.join('app/views/admin', model_name.pluralize, 'show.html.erb'), /(#{Regexp.escape(sentinel)})/mi do |match|
       "#{match}#{reference_list}"
     end
@@ -97,8 +142,46 @@ class Rails::Generator::Commands::Destroy
     logger.remove look_for
   end
   
+  def add_show_view_to_model_show
+    look_for = <<-CODE
+<% if @#{model_name}.#{reference_value} %>
+<h3><%=link_to "\#{#{reference_class_name}.human_name} #\#{@#{model_name}.#{reference_value}.id}", [:admin, @#{model_name}.#{reference_value}] %></h3>
+<div class="issue detail">
+	<%= render :partial => 'admin/#{reference_value}/show' , :locals => {:#{model_name} => @#{model_name}.#{reference_value}} %>
+</div>
+<% end %>
+    CODE
+        gsub_file File.join('app/views/admin', model_name.pluralize, 'show.html.erb'), /(#{Regexp.escape(look_for)})/mi, ''
+        logger.revert File.join('app/views/admin', model_name.pluralize, 'show.html.erb')
+        gsub_file File.join('app/views/admin', model_name.pluralize, 'edit.html.erb'), /(#{Regexp.escape(look_for)})/mi, ''
+        logger.revert File.join('app/views/admin', model_name.pluralize, 'edit.html.erb')
+  end
+  
   def add_list_view_to_model_show
-    look_for = "<h3>#{reference_model_name.humanize} List</h3>\n<%= render :partial => 'admin/#{reference_value}/list', :locals => {:#{reference_value} => @#{model_name}.#{reference_value}.all(:page => params[:#{reference_model_name}_page], :order => (params[:#{refence_model_name}_sort].gsub('_reverse', ' DESC') unless params[:#{refence_model_name}_sort].blank?))} %>\n"
+    look_for = <<-CODE
+<div class="contextual">
+  <%= link_to "\#{t 'Add'} \#{#{reference_class_name}.human_name}", '#', :class => "icon icon-add", :onclick => "showAndScrollTo('add_#{reference_model_name}','focus_#{reference_model_name}'); return false;"%>
+</div>
+<h3><%=#{reference_class_name}.human_name%></h3>
+<% @#{reference_value} = @#{model_name}.#{reference_value}.paginate(:page => params[:#{reference_model_name}_page], :order => (params[:#{reference_model_name}_sort].gsub('_reverse', ' DESC') unless params[:#{reference_model_name}_sort].blank?))%>
+<div class="autoscroll">
+  <%= render :partial => 'admin/#{reference_value}/list', :locals => {:#{reference_value} => @#{reference_value}} %>
+</div>
+<%= will_paginate @#{reference_value}, :renderer => SomaticLinkRenderer %>
+<div id="add_#{reference_model_name}" style="display:none">
+  <h3><%= "\#{t('New')} \#{#{reference_class_name}.human_name}" %></h3>
+  <div id="focus_#{reference_model_name}"></div>
+  <% form_for([:admin, @#{model_name}.#{reference_value}.build]) do |f| %>
+    <%= f.error_messages %>
+    <div class="issue">
+      <%= render :partial => 'admin/#{reference_value}/form' , :locals => {:f => f} %>
+    </div>
+    <%= hidden_field_tag :return_to, url_for%>
+    <%= f.submit t('Create') %>
+  <% end %>
+  <%= link_to_function t('Cancel'), "$('add_#{reference_model_name}').hide()"%>
+</div>
+CODE
     gsub_file File.join('app/views/admin', model_name.pluralize, 'show.html.erb'), /(#{Regexp.escape(look_for)})/mi, ''
     logger.revert File.join('app/views/admin', model_name.pluralize, 'show.html.erb')
     gsub_file File.join('app/views/admin', model_name.pluralize, 'edit.html.erb'), /(#{Regexp.escape(look_for)})/mi, ''

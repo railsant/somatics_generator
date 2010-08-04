@@ -85,7 +85,7 @@ class <%= controller_class_name %>Controller < Admin::AdminController
     respond_to do |format|
       if @<%= file_name %>.save
         flash[:notice] = '<%= class_name %> was successfully created.'
-        format.html { redirect_to([:admin,@<%= file_name %>]) }
+        format.html { redirect_to(params[:return_to] || [:admin,@<%= file_name %>]) }
         format.xml  { render :xml => @<%= file_name %>, :status => :created, :location => @<%= file_name %> }
       else
         format.html { render :action => "new" }
