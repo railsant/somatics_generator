@@ -24,29 +24,31 @@ class ModelRelationshipGenerator < Rails::Generator::NamedBase
         @migration_table_name = @reference_value
         @migration_attribute = "#{@model_name}_id"
       when 'belongs_to'
-        @reference_value = @reference_model_name
-        @migration_model_name = @model_name
-        @migration_table_name = @model_name.pluralize
-        @migration_attribute = "#{@reference_model_name}_id"
+        # @reference_value = @reference_model_name
+        # @migration_model_name = @model_name
+        # @migration_table_name = @model_name.pluralize
+        # @migration_attribute = "#{@reference_model_name}_id"
     end
   end
   
   def manifest
     record do |m|
-      m.add_relationship_to_model
-      m.add_list_view_to_model_show if relationship == 'has_many'
-      m.add_show_view_to_model_show if relationship == 'belongs_to'
-      m.dependency 'admin_attributes', [@migration_model_name, "#{migration_attribute}:integer"], :skip_migration => true unless options[:skip_views]
-      # raise 'migration_exists' if m.migration_exists?("add_#{migration_attribute}_to_#{migration_table_name}")
-      unless options[:skip_migration] 
-        m.migration_template 'migration.rb', "db/migrate", {
-          :assigns => {
-            :migration_name => "add_#{migration_attribute}_to_#{migration_table_name}",
-            :table_name => migration_table_name,
-            :attribute => migration_attribute
-          },
-          :migration_file_name => "add_#{migration_attribute}_to_#{migration_table_name}"
-        }
+      if relationship == 'has_many'
+        m.add_relationship_to_model
+        m.add_list_view_to_model_show
+        m.add_show_view_to_model_show
+        m.dependency 'admin_attributes', [@migration_model_name, "#{migration_attribute}:integer"], :skip_migration => true unless options[:skip_views]
+        # raise 'migration_exists' if m.migration_exists?("add_#{migration_attribute}_to_#{migration_table_name}")
+        unless options[:skip_migration] 
+          m.migration_template 'migration.rb', "db/migrate", {
+            :assigns => {
+              :migration_name => "add_#{migration_attribute}_to_#{migration_table_name}",
+              :table_name => migration_table_name,
+              :attribute => migration_attribute
+            },
+            :migration_file_name => "add_#{migration_attribute}_to_#{migration_table_name}"
+          }
+        end
       end
     end
   end
@@ -70,9 +72,15 @@ end
 
 class Rails::Generator::Commands::Create
   def add_relationship_to_model
-    relation = "#{relationship} :#{reference_value}"
+    relation = "has_many :#{reference_value}"
     sentinel = "class #{class_name} < ActiveRecord::Base\n"
     gsub_file File.join('app/models', "#{model_name}.rb"), /(#{Regexp.escape(sentinel)})/mi do |match|
+      "#{match}  #{relation}\n"
+    end
+    logger.insert relation
+    relation = "belongs_to :#{model_name}"
+    sentinel = "class #{reference_class_name} < ActiveRecord::Base\n"
+    gsub_file File.join('app/models', "#{reference_model_name}.rb"), /(#{Regexp.escape(sentinel)})/mi do |match|
       "#{match}  #{relation}\n"
     end
     logger.insert relation
@@ -81,21 +89,21 @@ class Rails::Generator::Commands::Create
   def add_show_view_to_model_show
     sentinel = "<!-- More List View -->\n"
     reference_list = <<-CODE
-<% if @#{model_name}.#{reference_value} %>
-<h3><%=link_to "\#{#{reference_class_name}.human_name} #\#{@#{model_name}.#{reference_value}.id}", [:admin, @#{model_name}.#{reference_value}] %></h3>
+<% if @#{reference_model_name}.#{model_name} %>
+<h3><%=link_to "\#{#{class_name}.human_name} #\#{@#{reference_model_name}.#{model_name}.id}", [:admin, @#{reference_model_name}.#{model_name}] %></h3>
 <div class="issue detail">
-	<%= render :partial => 'admin/#{reference_model_name.pluralize}/show' , :locals => {:#{reference_value} => @#{model_name}.#{reference_value}} %>
+	<%= render :partial => 'admin/#{model_name.pluralize}/show' , :locals => {:#{model_name} => @#{reference_model_name}.#{model_name}} %>
 </div>
 <% end %>
     CODE
-    gsub_file File.join('app/views/admin', model_name.pluralize, 'show.html.erb'), /(#{Regexp.escape(sentinel)})/mi do |match|
+    gsub_file File.join('app/views/admin', reference_model_name.pluralize, 'show.html.erb'), /(#{Regexp.escape(sentinel)})/mi do |match|
       "#{match}#{reference_list}"
     end
     logger.update File.join('app/views/admin', model_name.pluralize, 'show.html.erb')
-    gsub_file File.join('app/views/admin', model_name.pluralize, 'edit.html.erb'), /(#{Regexp.escape(sentinel)})/mi do |match|
+    gsub_file File.join('app/views/admin', reference_model_name.pluralize, 'edit.html.erb'), /(#{Regexp.escape(sentinel)})/mi do |match|
       "#{match}#{reference_list}"
     end
-    logger.update File.join('app/views/admin', model_name.pluralize, 'edit.html.erb')
+    logger.update File.join('app/views/admin', reference_model_name.pluralize, 'edit.html.erb')
   end
   
   def add_list_view_to_model_show
@@ -136,18 +144,22 @@ CODE
 end
 
 class Rails::Generator::Commands::Destroy
-  def add_relationship_to_models
-    look_for = "#{relationship} :#{reference_value}"
+  def add_relationship_to_model
+    look_for = "has_many :#{reference_value}"
     gsub_file File.join('app/models', "#{model_name}.rb"), /(#{Regexp.escape(look_for)})/mi, ''
+    logger.remove look_for
+    
+    look_for = "belongs_to :#{reference_value}"
+    gsub_file File.join('app/models', "#{reference_model_name}.rb"), /(#{Regexp.escape(look_for)})/mi, ''
     logger.remove look_for
   end
   
   def add_show_view_to_model_show
     look_for = <<-CODE
-<% if @#{model_name}.#{reference_value} %>
-<h3><%=link_to "\#{#{reference_class_name}.human_name} #\#{@#{model_name}.#{reference_value}.id}", [:admin, @#{model_name}.#{reference_value}] %></h3>
+<% if @#{reference_model_name}.#{model_name} %>
+<h3><%=link_to "\#{#{class_name}.human_name} #\#{@#{reference_model_name}.#{model_name}.id}", [:admin, @#{reference_model_name}.#{model_name}] %></h3>
 <div class="issue detail">
-	<%= render :partial => 'admin/#{reference_value}/show' , :locals => {:#{model_name} => @#{model_name}.#{reference_value}} %>
+	<%= render :partial => 'admin/#{model_name.pluralize}/show' , :locals => {:#{model_name} => @#{reference_model_name}.#{model_name}} %>
 </div>
 <% end %>
     CODE
