@@ -31,3 +31,19 @@ en:
   no_data_available: No Data Available
   Add: Add
   Cancel: Cancel
+  all: All
+  lt: Less than
+  lte: Less than or Equal
+  eq: Equals
+  ne: Not Equal
+  gt: Greater than
+  gte: Greater than or Equal
+  like: Contains
+  not_like: Not Contain
+  equals: Equals
+  does_not_equal: Does not Equal
+  on: On
+  before: Before
+  after: After
+  between: Between
+  apply: Apply
