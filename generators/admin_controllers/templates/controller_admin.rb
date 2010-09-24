@@ -8,7 +8,6 @@ class Admin::AdminController < ActionController::Base
   # Scrub sensitive parameters from your log
   filter_parameter_logging :password
   
-  include RedmineFilter
   include UserAuthenticatedSystem
   before_filter :user_login_required
   

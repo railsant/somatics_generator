@@ -1,15 +1,4 @@
 class <%= controller_class_name %>Controller < Admin::AdminController
-  # Redmine Filters
-  available_filters :id,  {:name => 'ID', :type => :integer, :order => 1}
-  <% attributes.each_with_index do |attribute, index| -%>
-  # available_filters :<%= attribute.name %>,  {:name => '<%= attribute.name.humanize %>', :type => :<%= attribute.type %>, :order => <%= index %>}
-  <% end -%>
-
-  default_filter :id
-  <% attributes.each do |attribute| -%>
-  # default_filter :<%= attribute.name %>
-  <% end %>
-
   # GET /<%= table_name %>
   # GET /<%= table_name %>.xml
   def index
@@ -17,13 +6,13 @@ class <%= controller_class_name %>Controller < Admin::AdminController
     @headers = <%= attributes.collect {|attribute| attribute.name.humanize}.inspect %>
     respond_to do |format|
       format.html {
-        @<%= table_name %> = <%= class_name %>.paginate(:page => params[:<%= table_name %>_page], :conditions => query_statement, :order => (params[:<%= singular_name %>_sort].gsub('_reverse', ' DESC') unless params[:<%= singular_name %>_sort].blank?))
+        @<%= table_name %> = <%= class_name %>.apply_query(params).paginate(:page => params[:<%= table_name %>_page], :order => (params[:<%= singular_name %>_sort].gsub('_reverse', ' DESC') unless params[:<%= singular_name %>_sort].blank?))
       }
       format.xml { 
-        @<%= table_name %> = <%= class_name %>.all(:conditions => query_statement)
+        @<%= table_name %> = <%= class_name %>.apply_query(params)
       }
       format.csv {
-        @<%= table_name %> = <%= class_name %>.all(:conditions => query_statement)
+        @<%= table_name %> = <%= class_name %>.apply_query(params)
         csv_string = FasterCSV.generate do |csv|
         	csv << @headers
         	@<%= table_name %>.each do |<%= singular_name %>|
@@ -34,12 +23,12 @@ class <%= controller_class_name %>Controller < Admin::AdminController
   				:disposition => "attachment; filename=<%= table_name %>.csv"
       }
       format.xls {
-        @<%= table_name %> = <%= class_name %>.all(:conditions => query_statement)
+        @<%= table_name %> = <%= class_name %>.apply_query(params)
         render :xls => @<%= table_name %>
       }
       format.pdf {
         params[:fields] = @fields
-        @<%= table_name %> = <%= class_name %>.all(:conditions => query_statement)
+        @<%= table_name %> = <%= class_name %>.apply_query(params)
         prawnto :prawn => {:text_options => { :wrap => :character }, :page_layout => :portrait }
       }
     end
