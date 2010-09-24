@@ -46,4 +46,10 @@ en:
   before: Before
   after: After
   between: Between
+  direct_apply: Apply
+  yes: Yes
+  no: No
   apply: Apply
+  clear: Clear
+  filters: Filters
+  add_filter: Add Filter

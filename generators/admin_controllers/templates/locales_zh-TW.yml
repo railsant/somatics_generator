@@ -31,3 +31,25 @@
   no_data_available: 未有可用的資料
   Add: 加入
   Cancel: 取消
+  all: 所有
+  lt: 小過
+  lte: 小過或等於
+  eq: 等於
+  ne: 不等於
+  gt: 大過
+  gte: 大過或等於
+  like: 包含
+  not_like: 不包含
+  equals: 等於
+  does_not_equal: 不等於
+  on: 在
+  before: 在...前
+  after: 在...後
+  between: 之間
+  direct_apply: 使用
+  yes: 是
+  no: 否
+  apply: 確定
+  clear: 清除
+  filters: 篩選
+  add_filter: 加入篩選項目
