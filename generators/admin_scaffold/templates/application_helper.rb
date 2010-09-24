@@ -38,10 +38,6 @@ module Admin::AdminHelper
     }
     link_to_remote(text + sort_asc_desc_helper(param), options, html_options)
   end
-
-  def operators_for_select(filter_type)
-    Query.operators_by_filter_type[filter_type].collect {|o| [(Query.operators[o].to_s.humanize), o]}
-  end
   
   def excel_document(xml, &block)
     xml.instruct! :xml, :version=>"1.0", :encoding=>"UTF-8" 
